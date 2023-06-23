@@ -17,10 +17,11 @@ import (
 // "github.com/pocketbase/dbx"
 
 type Hooks struct {
-	ID        int    `db:"id" json:"id"`
-	TableName string `db:"tableName" id:"tableName"`
-	URL       string `db:"url" id:"url"`
-	Action    string `db:"action" id:"action"`
+	ID        int           `db:"id" json:"id"`
+	TableName string        `db:"tableName" id:"tableName"`
+	URL       string        `db:"url" id:"url"`
+	Op        string        `db:"op" id:"op"`
+	Header    types.JsonMap `db:"header" id:"header"`
 }
 
 func New() *pocketbase.PocketBase {
@@ -70,10 +71,15 @@ func createModels(app *pocketbase.PocketBase) error {
 				Required: true,
 			},
 			&schema.SchemaField{
-				Name:     "action",
+				Name:     "op",
 				Type:     schema.FieldTypeSelect,
 				Options:  &schema.SelectOptions{MaxSelect: 1, Values: []string{"insert", "update", "delete"}},
 				Required: true,
+			},
+			&schema.SchemaField{
+				Name:     "header",
+				Type:     schema.FieldTypeJson,
+				Required: false,
 			},
 			// ,
 			// &schema.SchemaField{
